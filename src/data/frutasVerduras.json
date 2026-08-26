@@ -1,0 +1,12 @@
+[
+  { "id": 1, "nombre": "Manzana" },
+  { "id": 2, "nombre": "Banana" },
+  { "id": 3, "nombre": "Naranja" },
+  { "id": 4, "nombre": "Frutilla" },
+  { "id": 5, "nombre": "Pera" },
+  { "id": 6, "nombre": "Zanahoria" },
+  { "id": 7, "nombre": "Tomate" },
+  { "id": 8, "nombre": "Lechuga" },
+  { "id": 9, "nombre": "Papa" },
+  { "id": 10, "nombre": "Brócoli" }
+]
