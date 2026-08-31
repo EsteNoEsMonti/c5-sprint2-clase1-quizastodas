@@ -3,7 +3,11 @@ import Card from "./Card"
 const FrutaList = ({ productos, estaEnBolsa, agregarBolsa, quitarBolsa }) => {
   // early return: no hay resultados de la busqueda
   if (productos.length === 0) {
-    return <p className="text-gray-500">No encontramos esa fruta 🔍</p>
+    return (
+      <p className="rounded-lg border border-dashed border-gray-300 p-6 text-center text-gray-500">
+        No encontramos ese producto 🔍
+      </p>
+    )
   }
 
   return (

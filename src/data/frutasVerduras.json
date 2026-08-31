@@ -1,12 +1,18 @@
 [
-  { "id": 1, "nombre": "Manzana" },
-  { "id": 2, "nombre": "Banana" },
-  { "id": 3, "nombre": "Naranja" },
-  { "id": 4, "nombre": "Frutilla" },
-  { "id": 5, "nombre": "Pera" },
-  { "id": 6, "nombre": "Zanahoria" },
-  { "id": 7, "nombre": "Tomate" },
-  { "id": 8, "nombre": "Lechuga" },
-  { "id": 9, "nombre": "Papa" },
-  { "id": 10, "nombre": "Brócoli" }
+  { "id": 1,  "nombre": "Pera",      "precio": 1900, "tipo": "fruta",   "esDeEstacion": true  },
+  { "id": 2,  "nombre": "Manzana",   "precio": 1700, "tipo": "fruta",   "esDeEstacion": true  },
+  { "id": 3,  "nombre": "Banana",    "precio": 2100, "tipo": "fruta",   "esDeEstacion": false },
+  { "id": 4,  "nombre": "Naranja",   "precio": 1400, "tipo": "fruta",   "esDeEstacion": true  },
+  { "id": 5,  "nombre": "Mandarina", "precio": 1600, "tipo": "fruta",   "esDeEstacion": true  },
+  { "id": 6,  "nombre": "Frutilla",  "precio": 4800, "tipo": "fruta",   "esDeEstacion": false },
+  { "id": 7,  "nombre": "Kiwi",      "precio": 3900, "tipo": "fruta",   "esDeEstacion": false },
+  { "id": 8,  "nombre": "Uva",       "precio": 3200, "tipo": "fruta",   "esDeEstacion": false },
+  { "id": 9,  "nombre": "Papa",      "precio": 1100, "tipo": "verdura", "esDeEstacion": true  },
+  { "id": 10, "nombre": "Cebolla",   "precio": 1250, "tipo": "verdura", "esDeEstacion": true  },
+  { "id": 11, "nombre": "Tomate",    "precio": 2600, "tipo": "verdura", "esDeEstacion": false },
+  { "id": 12, "nombre": "Zanahoria", "precio": 1350, "tipo": "verdura", "esDeEstacion": true  },
+  { "id": 13, "nombre": "Lechuga",   "precio": 1800, "tipo": "verdura", "esDeEstacion": true  },
+  { "id": 14, "nombre": "Zapallo",   "precio": 1500, "tipo": "verdura", "esDeEstacion": true  },
+  { "id": 15, "nombre": "Morrón",    "precio": 3400, "tipo": "verdura", "esDeEstacion": false },
+  { "id": 16, "nombre": "Acelga",    "precio": 1200, "tipo": "verdura", "esDeEstacion": false }
 ]

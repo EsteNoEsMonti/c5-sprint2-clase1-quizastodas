@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+@theme {
+  --color-fondo:   #ffffff;
+  --color-texto:   #18181b;
+  --color-tarjeta: #f4f4f5;
+  --color-acento:  #16a34a;
+}
+
+.dark {
+  --color-fondo:   #0b0b0f;
+  --color-texto:   #f4f4f5;
+  --color-tarjeta: #1c1c22;
+}

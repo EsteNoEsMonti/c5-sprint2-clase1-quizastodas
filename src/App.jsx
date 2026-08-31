@@ -3,38 +3,35 @@ import frutasVerduras from "./data/frutasVerduras.json"
 
 import Contador from "./components/Contador"
 import FrutaList from "./components/FrutaList"
-import Bolsa from "./components/Bolsa"
+import BolsaModal from "./components/BolsaModal"
 import Reloj from "./components/Reloj"
 import Cronometro from "./components/Cronometro"
 import EfectoDemo from "./components/EfectoDemo"
+import EjemploStorage from "./components/EjemploStorage"
+import ThemeSwitcher from "./components/ThemeSwitcher"
 
 const App = () => {
   // el estado vive aca, arriba de todos los que lo necesitan
-  const [bolsa, setBolsa] = useState([])
-  const [busqueda, setBusqueda] = useState('')
-
-  // interruptores para las demos de hoy
-  const [mostrarReloj, setMostrarReloj] = useState(false)
-  const [mostrarCronometro, setMostrarCronometro] = useState(false)
-  const [mostrarEfectoDemo, setMostrarEfectoDemo] = useState(false)
-
-  // variable comun: NO es estado, se recalcula en cada dibujado
+  const [bolsa, setBolsa] = useState(() => {
+    try {
+      const guardado = localStorage.getItem('verduleria:bolsa')
+      return guardado ? JSON.parse(guardado) : []
+    } catch {
+      return []
+    }
+  })
   const bolsaTotal = bolsa.length
-
+  const [mostrarBolsa, setMostrarBolsa] = useState(false)
+  const [busqueda, setBusqueda] = useState('')
   const [visibles, setVisibles] = useState([])
 
-  useEffect(() => {
-    console.log('🔎 corre el efecto del buscador. busqueda =', busqueda)
-
-    setVisibles(
-      frutasVerduras.filter((producto) =>
-        producto.nombre.toLowerCase().includes(busqueda.toLowerCase())
-      )
-    )
-  }, [busqueda])
+  // interruptores para las demos
+  const [mostrarReloj, setMostrarReloj] = useState(false)
+  // const [mostrarCronometro, setMostrarCronometro] = useState(false)
+  const [mostrarEfectoDemo, setMostrarEfectoDemo] = useState(false)
 
   // este log es del cuerpo del componente: se ve en CADA dibujado
-  console.log('🎨 React dibujo App. visibles =', visibles.length)
+  // console.log('🎨 React dibujo App. visibles =', visibles.length)
 
   // true si el producto ya esta en la bolsa
   const estaEnBolsa = (id) => bolsa.some((item) => item.id === id)
@@ -53,11 +50,28 @@ const App = () => {
   }
 
   const vaciarBolsa = () => {
-    setBolsa([])
+    if (confirm('estas seguro de querer vaciar la bolsa?')) {
+      setBolsa([])
+    }
   }
 
+  useEffect(() => {
+    console.log('🔎 corre el efecto del buscador. busqueda =', busqueda)
+
+    setVisibles(
+      frutasVerduras.filter((producto) =>
+        producto.nombre.toLowerCase().includes(busqueda.toLowerCase())
+      )
+    )
+  }, [busqueda])
+
+  useEffect(() => {
+    localStorage.setItem('verduleria:bolsa', JSON.stringify(bolsa))
+  }, [bolsa])
+
   return (
-    <main className="p-8">
+    // <main className="min-h-screen bg-fondo p-8 text-texto">
+    <main className="min-h-screen bg-fondo p-8 text-texto">
       <h1 className="text-3xl font-bold">Verduleria</h1>
 
       <Contador />
@@ -69,23 +83,17 @@ const App = () => {
           <input
             type="text"
             placeholder="buscar en verduleria"
-            className="rounded-lg border p-2"
+            className="rounded-lg border border-gray-300 bg-tarjeta p-2 text-texto"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
           />
 
-          <p>
-            En la bolsa: <span className="font-bold">{bolsaTotal}</span>
-          </p>
-
-          {bolsaTotal > 0 && (
-            <button
-              onClick={vaciarBolsa}
-              className="px-3 py-1.5 rounded bg-gray-500 text-white hover:bg-gray-600"
-            >
-              Vaciar bolsa
-            </button>
-          )}
+          <button
+            onClick={() => setMostrarBolsa(true)}
+            className="px-3 py-1.5 rounded bg-green-600 text-white hover:bg-green-700"
+          >
+            🛒 Ver bolsa ({bolsaTotal})
+          </button>
         </div>
 
         <FrutaList
@@ -94,11 +102,17 @@ const App = () => {
           agregarBolsa={agregarBolsa}
           quitarBolsa={quitarBolsa}
         />
-
-        <Bolsa bolsa={bolsa} quitarBolsa={quitarBolsa} />
       </section>
 
-      {/* CLASE 02: laboratorio. Los dos se montan y desmontan con un boton. */}
+      {mostrarBolsa && (
+        <BolsaModal
+          bolsa={bolsa}
+          quitarBolsa={quitarBolsa}
+          vaciarBolsa={vaciarBolsa}
+          onClose={() => setMostrarBolsa(false)}
+        />
+      )}
+
       <section className="mt-12 border-t pt-8">
         <h2 className="text-2xl font-bold mb-4">Laboratorio clase 02</h2>
 
@@ -130,6 +144,12 @@ const App = () => {
           {/* {mostrarCronometro && <Cronometro />} */}
           {mostrarEfectoDemo && <EfectoDemo />}
         </div>
+      </section>
+
+      <section className="mt-12 border-t pt-8">
+        <h2 className="text-2xl font-bold mb-4">Laboratorio clase 03</h2>
+        <EjemploStorage />
+        <ThemeSwitcher />
       </section>
     </main>
   )
