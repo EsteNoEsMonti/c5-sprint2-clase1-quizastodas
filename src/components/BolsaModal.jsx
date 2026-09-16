@@ -1,5 +1,18 @@
-const BolsaModal = ({ bolsa, quitarBolsa, vaciarBolsa, onClose }) => {
+import { useBolsaContext } from "../contexts/BolsaContext"
+
+const BolsaModal = ({ onClose }) => {
+  const { bolsa, agregarOQuitar, vaciar } = useBolsaContext()
+
   const icono = (tipo) => (tipo === "fruta" ? "🍐" : "🥕")
+
+  const quitarBolsa = (id) => {
+    const producto = bolsa.find((item) => item.id === id)
+    if (producto) agregarOQuitar(producto)
+  }
+
+  const vaciarBolsa = () => {
+    if (confirm('estas seguro de querer vaciar la bolsa?')) vaciar()
+  }
 
   return (
     // fondo oscuro: al clickearlo, cierra

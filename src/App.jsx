@@ -1,59 +1,33 @@
 import { useState, useEffect } from "react"
 import frutasVerduras from "./data/frutasVerduras.json"
 
-import Contador from "./components/Contador"
+import Contador from "./components/_demos/Contador"
 import FrutaList from "./components/FrutaList"
 import BolsaModal from "./components/BolsaModal"
-import Reloj from "./components/Reloj"
-import Cronometro from "./components/Cronometro"
-import EfectoDemo from "./components/EfectoDemo"
-import EjemploStorage from "./components/EjemploStorage"
-import ThemeSwitcher from "./components/ThemeSwitcher"
+import Reloj from "./components/_demos/Reloj"
+import Cronometro from "./components/_demos/Cronometro"
+import EfectoDemo from "./components/_demos/EfectoDemo"
+import EjemploStorage from "./components/_demos/EjemploStorage"
+import ThemeSwitcher from "./components/_demos/ThemeSwitcher"
+import { useSaludo } from "./hooks/useSalado"
+import useToggle from "./hooks/useToggle"
+import { useBolsaContext } from "./contexts/BolsaContext"
+import EjemploContextSaludo from "./components/_demos/EjemploContextSaludo"
+import { useSaludoContext } from "./contexts/SaludoContext"
 
 const App = () => {
-  // el estado vive aca, arriba de todos los que lo necesitan
-  const [bolsa, setBolsa] = useState(() => {
-    try {
-      const guardado = localStorage.getItem('verduleria:bolsa')
-      return guardado ? JSON.parse(guardado) : []
-    } catch {
-      return []
-    }
-  })
-  const bolsaTotal = bolsa.length
-  const [mostrarBolsa, setMostrarBolsa] = useState(false)
+  const { mensaje, nombre } = useSaludo('lucas xd')
+  console.log(mensaje, nombre)
+  const { bolsaTotal } = useBolsaContext()
   const [busqueda, setBusqueda] = useState('')
   const [visibles, setVisibles] = useState([])
 
-  // interruptores para las demos
-  const [mostrarReloj, setMostrarReloj] = useState(false)
-  // const [mostrarCronometro, setMostrarCronometro] = useState(false)
-  const [mostrarEfectoDemo, setMostrarEfectoDemo] = useState(false)
+  // useToggle devuelve [valor, alternar]: la funcion NO recibe argumentos
+  const [mostrarBolsa, alternarBolsa] = useToggle(false)
+  const [mostrarReloj, alternarReloj] = useToggle(false)
+  const [mostrarEfectoDemo, alternarEfectoDemo] = useToggle(false)
 
-  // este log es del cuerpo del componente: se ve en CADA dibujado
-  // console.log('🎨 React dibujo App. visibles =', visibles.length)
-
-  // true si el producto ya esta en la bolsa
-  const estaEnBolsa = (id) => bolsa.some((item) => item.id === id)
-
-  const agregarBolsa = (fruta) => {
-    setBolsa((prev) => {
-      // si ya esta, devolvemos el mismo array (no se repite)
-      if (prev.some((item) => item.id === fruta.id)) return prev
-
-      return [...prev, fruta]
-    })
-  }
-
-  const quitarBolsa = (id) => {
-    setBolsa((prev) => prev.filter((item) => item.id !== id))
-  }
-
-  const vaciarBolsa = () => {
-    if (confirm('estas seguro de querer vaciar la bolsa?')) {
-      setBolsa([])
-    }
-  }
+  const saludo = useSaludoContext()
 
   useEffect(() => {
     console.log('🔎 corre el efecto del buscador. busqueda =', busqueda)
@@ -64,10 +38,6 @@ const App = () => {
       )
     )
   }, [busqueda])
-
-  useEffect(() => {
-    localStorage.setItem('verduleria:bolsa', JSON.stringify(bolsa))
-  }, [bolsa])
 
   return (
     // <main className="min-h-screen bg-fondo p-8 text-texto">
@@ -89,36 +59,28 @@ const App = () => {
           />
 
           <button
-            onClick={() => setMostrarBolsa(true)}
+            onClick={alternarBolsa}
             className="px-3 py-1.5 rounded bg-green-600 text-white hover:bg-green-700"
           >
             🛒 Ver bolsa ({bolsaTotal})
           </button>
         </div>
 
-        <FrutaList
-          productos={visibles}
-          estaEnBolsa={estaEnBolsa}
-          agregarBolsa={agregarBolsa}
-          quitarBolsa={quitarBolsa}
-        />
+        {/* solo le paso los productos filtrados por la busqueda.
+            todo lo de la bolsa lo toma cada Card del contexto */}
+        <FrutaList productos={visibles} />
       </section>
 
-      {mostrarBolsa && (
-        <BolsaModal
-          bolsa={bolsa}
-          quitarBolsa={quitarBolsa}
-          vaciarBolsa={vaciarBolsa}
-          onClose={() => setMostrarBolsa(false)}
-        />
-      )}
+      {/* el modal saca la bolsa y las funciones del contexto.
+          onClose SI va por prop: abrir/cerrar es estado de App, no de la bolsa */}
+      {mostrarBolsa && <BolsaModal onClose={alternarBolsa} />}
 
       <section className="mt-12 border-t pt-8">
         <h2 className="text-2xl font-bold mb-4">Laboratorio clase 02</h2>
 
         <div className="flex flex-wrap gap-2 mb-4">
           <button
-            onClick={() => setMostrarReloj((prev) => !prev)}
+            onClick={alternarReloj}
             className="px-3 py-1.5 rounded bg-indigo-500 text-white hover:bg-indigo-600"
           >
             {mostrarReloj ? 'esconder reloj' : 'mostrar reloj'}
@@ -132,7 +94,7 @@ const App = () => {
           </button> */}
 
           <button
-            onClick={() => setMostrarEfectoDemo((prev) => !prev)}
+            onClick={alternarEfectoDemo}
             className="px-3 py-1.5 rounded bg-indigo-500 text-white hover:bg-indigo-600"
           >
             {mostrarEfectoDemo ? 'esconder efectos' : 'mostrar efectos'}
@@ -150,6 +112,12 @@ const App = () => {
         <h2 className="text-2xl font-bold mb-4">Laboratorio clase 03</h2>
         <EjemploStorage />
         <ThemeSwitcher />
+      </section>
+
+      <section className="mt-12 border-t pt-8">
+        <h2 className="text-2xl font-bold mb-4">Laboratorio S3 clase 02</h2>
+        <EjemploContextSaludo />
+        hola2: {saludo}
       </section>
     </main>
   )

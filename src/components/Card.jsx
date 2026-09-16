@@ -1,6 +1,11 @@
-const Card = ({ producto, estaEnBolsa, agregarBolsa, quitarBolsa }) => {
-  // icono segun el tipo (campo nuevo del json)
+import { useBolsaContext } from "../contexts/BolsaContext"
+
+const Card = ({ producto }) => {
+  const { estaEnLaBolsa, agregarOQuitar } = useBolsaContext()
+
   const icono = producto.tipo === "fruta" ? "🍐" : "🥕"
+
+  const enLaBolsa = estaEnLaBolsa(producto.id)
 
   return (
     <div className="flex flex-col items-center gap-2 rounded-lg bg-tarjeta p-4 text-texto shadow-sm transition hover:shadow-md">
@@ -16,16 +21,17 @@ const Card = ({ producto, estaEnBolsa, agregarBolsa, quitarBolsa }) => {
         </span>
       )}
 
-      {estaEnBolsa ? (
+      {/* agregarOQuitar hace las dos cosas: si esta, lo saca; si no, lo agrega */}
+      {enLaBolsa ? (
         <button
-          onClick={() => quitarBolsa(producto.id)}
+          onClick={() => agregarOQuitar(producto)}
           className="mt-1 w-full rounded bg-red-500 px-3 py-1.5 text-white hover:bg-red-600"
         >
           Quitar
         </button>
       ) : (
         <button
-          onClick={() => agregarBolsa(producto)}
+          onClick={() => agregarOQuitar(producto)}
           className="mt-1 w-full rounded bg-acento px-3 py-1.5 text-white hover:opacity-90"
         >
           Agregar
